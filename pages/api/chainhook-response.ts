@@ -55,7 +55,7 @@ export default function handler(
       }
     )
     
-    if (req_data.success = true) {
+    if (req_data.success = true && req_data.amount > 10000000000) {
       insertData(req_data)
     } else {
       console.log("issue")
@@ -64,27 +64,4 @@ export default function handler(
     res.status(200).json({ message: 'Hello from Next.js!' })
   }
 }
-
-
-// req.body.apply[0].block_identifier.index
-// req.body.apply[0].timestamp
-// req.body.apply[0].transactions[0].transaction_identifier.hash
-// req.body.apply[0].transactions[0].metadata.success //true
-// req.body.apply[0].transactions[0].metadata.receipt.events[0].data.sender
-// req.body.apply[0].transactions[0].metadata.receipt.events[0].data.recipient
-// req.body.apply[0].transactions[0].metadata.receipt.events[0].data.amount
-// 
-// const { data, error } = await supabase
-// .from('transactions')
-// .insert([
-//   { some_column: 'someValue', other_column: 'otherValue' },
-// ])
-// .select()
-
-
-// import { createClient } from '@supabase/supabase-js'
-// const supabaseUrl = 'https://jftfzpyjscdbqvgdkyga.supabase.co'
-// const supabaseKey = process.env.SUPABASE_KEY
-// const supabase = createClient(supabaseUrl, supabaseKey)
-        
 

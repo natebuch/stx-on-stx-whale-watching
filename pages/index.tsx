@@ -23,7 +23,11 @@ function shortenString(str: string, startLength = 4, endLength = 4) {
 }
 
 function convertDateTime(dateTime: any) {
-  return new Date(dateTime).toString()
+  if (!dateTime) {
+    return 'No Data'
+  } else {
+    return new Date(dateTime).toString()
+  }
 }
 
 export default function Home() {

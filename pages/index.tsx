@@ -15,6 +15,9 @@ interface Transaction {
 }
 
 function shortenString(str: string, startLength = 4, endLength = 4) {
+  if (!str) {
+    return "no data"
+  }
   if (str.length <= startLength + endLength) {
       // If the string is not longer than the combined lengths, return it as is.
       return str;
@@ -117,12 +120,12 @@ export default function Home() {
                   allTimeData?.map((data, index) => (
                     <tr key={index}>
                       <td className="px-6 py-3">{(data.amount/Math.pow(10,6)).toLocaleString()}</td>
-                      <td className="px-6 py-3">{shortenString(data.sender)}</td>
-                      <td className="px-6 py-3">{shortenString(data.recipient)}</td>
-                      <td className="px-6 py-3">{data.block}</td>
+                      <td className="px-6 py-3">{shortenString(data?.sender)}</td>
+                      <td className="px-6 py-3">{shortenString(data?.recipient)}</td>
+                      <td className="px-6 py-3">{data?.block}</td>
                       <td className="px-6 py-3">
                           <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
-                            {shortenString(data.tx_id)}
+                            {shortenString(data?.tx_id)}
                           </a>
                       </td>
                       <td className="px-6 py-3">{convertDateTime(data.tx_timestamp)}</td>
@@ -150,12 +153,12 @@ export default function Home() {
                   recentData?.map((data, index) => (
                     <tr key={index}>
                       <td className="px-6 py-3">{(data.amount/Math.pow(10,6)).toLocaleString()}</td>
-                      <td className="px-6 py-3">{shortenString(data.sender)}</td>
-                      <td className="px-6 py-3">{shortenString(data.recipient)}</td>
+                      <td className="px-6 py-3">{shortenString(data?.sender)}</td>
+                      <td className="px-6 py-3">{shortenString(data?.recipient)}</td>
                       <td className="px-6 py-3">{data.block}</td>
                       <td className="px-6 py-3">
                           <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
-                            {shortenString(data.tx_id)}
+                            {shortenString(data?.tx_id)}
                           </a>
                       </td>
                       <td className="px-6 py-3">{convertDateTime(data.tx_timestamp)}</td>

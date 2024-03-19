@@ -69,6 +69,12 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const handleLinkClick = (event: any) => {
+    event.preventDefault(); // Stop the default navigation
+    // Open the link in a new tab with desired features (optional)
+    window.open(event.target.href, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <main
       className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
@@ -111,7 +117,7 @@ export default function Home() {
                       <td className="px-6 py-3">{shortenString(data.recipient)}</td>
                       <td className="px-6 py-3">{data.block}</td>
                       <td className="px-6 py-3">
-                          <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
+                          <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
                             {shortenString(data.tx_id)}
                           </a>
                       </td>
@@ -144,7 +150,7 @@ export default function Home() {
                       <td className="px-6 py-3">{shortenString(data.recipient)}</td>
                       <td className="px-6 py-3">{data.block}</td>
                       <td className="px-6 py-3">
-                          <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
+                          <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
                             {shortenString(data.tx_id)}
                           </a>
                       </td>
@@ -154,8 +160,7 @@ export default function Home() {
                 }
             </tbody>
           </table>
-        </div>
-        
+        </div>  
       </div>   
     </main>
   );

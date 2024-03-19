@@ -63,7 +63,7 @@ export default function Home() {
       if (recentError) {
         console.error('Error fetching recent data:', recentError);
       } else {
-        const sortedRecentData = recentData.sort((a, b) => a.amount - b.amount);
+        const sortedRecentData = recentData.sort((a, b) => b.amount - a.amount);
         setRecentData(sortedRecentData);
       }
 

@@ -59,12 +59,12 @@ export default function Home() {
         .from('transactions')
         .select('amount, sender, recipient, block, tx_id, tx_timestamp')
         .limit(10)
-        .order('id, amount', { ascending: false });
-
+        .order('id', { ascending: false });
       if (recentError) {
         console.error('Error fetching recent data:', recentError);
       } else {
-        setRecentData(recentData);
+        const sortedRecentData = recentData.sort((a, b) => a.amount - b.amount);
+        setRecentData(sortedRecentData);
       }
 
       setLoading(false);

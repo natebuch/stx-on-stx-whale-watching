@@ -8,7 +8,7 @@ type ResponseData = {
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_KEY as string);
 
 function epochToJsDate(timestamp: any){
-  return new Date(timestamp*1000).toString;
+  return new Date(timestamp*1000).toISOString();
 }
 
 async function insertData( req_data: any ) {

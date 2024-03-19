@@ -8,7 +8,7 @@ type ResponseData = {
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_KEY as string);
 
 function epochToJsDate(timestamp: any){
-  return new Date(timestamp*1000);
+  return new Date(timestamp*1000).toString;
 }
 
 async function insertData( req_data: any ) {
@@ -55,10 +55,10 @@ export default function handler(
       }
     )
     
-    if (req_data.success = true && req_data.amount > 10000000000) {
+    if (req_data.success = true && req_data.amount >= 10000000000) {
       insertData(req_data)
     } else {
-      console.log("issue")
+      console.log("Transaction failed or did not meet threshold")
     }
    
     res.status(200).json({ message: 'Hello from Next.js!' })

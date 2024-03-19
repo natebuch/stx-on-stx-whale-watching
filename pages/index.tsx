@@ -106,7 +106,7 @@ export default function Home() {
                 { 
                   allTimeData?.map((data, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-3">{data.amount/Math.pow(10,6)}</td>
+                      <td className="px-6 py-3">{(data.amount/Math.pow(10,6)).toLocaleString()}</td>
                       <td className="px-6 py-3">{shortenString(data.sender)}</td>
                       <td className="px-6 py-3">{shortenString(data.recipient)}</td>
                       <td className="px-6 py-3">{data.block}</td>
@@ -139,7 +139,7 @@ export default function Home() {
                 { 
                   recentData?.map((data, index) => (
                     <tr key={index}>
-                      <td className="px-6 py-3">{data.amount/Math.pow(10,6)}</td>
+                      <td className="px-6 py-3">{(data.amount/Math.pow(10,6)).toLocaleString()}</td>
                       <td className="px-6 py-3">{shortenString(data.sender)}</td>
                       <td className="px-6 py-3">{shortenString(data.recipient)}</td>
                       <td className="px-6 py-3">{data.block}</td>

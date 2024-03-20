@@ -99,6 +99,7 @@ export default function Home() {
       <h1  className="text-4xl text-white-700 uppercase dark:text-white-900 p-5">
       🐳 STX on STX Whale Watching 🐳
       </h1>
+      <h4>Still Indexing ...</h4>
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-1 lg:text-left">    
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <h2  className="text-xl text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

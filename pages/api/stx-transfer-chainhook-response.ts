@@ -13,7 +13,7 @@ function epochToJsDate(timestamp: any){
 
 async function insertData( req_data: any ) {
   const { data, error } = await supabase
-        .from('transactions')
+        .from('raw_transactions')
         .insert([
           { 
             transaction_data: req_data

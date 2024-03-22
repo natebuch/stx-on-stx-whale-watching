@@ -1,6 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js'
- 
+
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+}
+
 type ResponseData = {
   message: string
 }

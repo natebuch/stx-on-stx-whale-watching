@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import supabase from '../utils/supabase'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,9 +36,8 @@ function convertDateTime(dateTime: any) {
 export default function Home() {
   const [allTimeData, setAllTimeData] = useState<Transaction[]>([])
   const [recentData, setRecentData] = useState<Transaction[]>([])
+  const [startBlock, setStartBlock] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_KEY as string);
 
   useEffect(() => {
     async function fetchData() {
@@ -70,6 +69,17 @@ export default function Home() {
         setRecentData(sortedRecentData);
       }
 
+      const { data: startBlock, error: startBlockError } = await supabase
+        .from('transactions')
+        .select('block')
+        .limit(1)
+        .order('id');
+      if (startBlockError) {
+        console.error('Error fetching recent data:', startBlockError);
+      } else {
+        setStartBlock(startBlock[0].block)
+      }
+
       setLoading(false);
     }
 
@@ -99,77 +109,75 @@ export default function Home() {
       <h1  className="text-4xl text-white-700 uppercase dark:text-white-900 p-5">
       🐳 STX on STX Whale Watching 🐳
       </h1>
-      <h4>Still Indexing ...</h4>
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-1 lg:text-left">    
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <h2  className="text-xl text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            All Time Transactions
-          </h2>
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 py-5">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">Amount(STX)</th>
-                <th scope="col" className="px-6 py-3">Sender</th>
-                <th scope="col" className="px-6 py-3">Recipient</th>
-                <th scope="col" className="px-6 py-3">Block(STX)</th>
-                <th scope="col" className="px-6 py-3">Tx Id</th>
-                <th scope="col" className="px-6 py-3">Tx Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-                { 
-                  allTimeData?.map((data, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-3">{(data.amount/Math.pow(10,6)).toLocaleString()}</td>
-                      <td className="px-6 py-3">{shortenString(data?.sender)}</td>
-                      <td className="px-6 py-3">{shortenString(data?.recipient)}</td>
-                      <td className="px-6 py-3">{data?.block}</td>
-                      <td className="px-6 py-3">
-                          <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
-                            {shortenString(data?.tx_id)}
-                          </a>
-                      </td>
-                      <td className="px-6 py-3">{convertDateTime(data.tx_timestamp)}</td>
-                    </tr>
-                  ))
-                }
-            </tbody>
-          </table>
-          <h2  className="text-xl text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            Recent Transactions
-          </h2>
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 py-5">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">Amount(STX)</th>
-                <th scope="col" className="px-6 py-3">Sender</th>
-                <th scope="col" className="px-6 py-3">Recipient</th>
-                <th scope="col" className="px-6 py-3">Block(STX)</th>
-                <th scope="col" className="px-6 py-3">Tx Id</th>
-                <th scope="col" className="px-6 py-3">Tx Timestamp</th>
-              </tr>
-            </thead>
-            <tbody>
-                { 
-                  recentData?.map((data, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-3">{(data.amount/Math.pow(10,6)).toLocaleString()}</td>
-                      <td className="px-6 py-3">{shortenString(data?.sender)}</td>
-                      <td className="px-6 py-3">{shortenString(data?.recipient)}</td>
-                      <td className="px-6 py-3">{data.block}</td>
-                      <td className="px-6 py-3">
-                          <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
-                            {shortenString(data?.tx_id)}
-                          </a>
-                      </td>
-                      <td className="px-6 py-3">{convertDateTime(data.tx_timestamp)}</td>
-                    </tr>
-                  ))
-                }
-            </tbody>
-          </table>
-        </div>  
-      </div>   
+      { loading ? (<h2>Loading ... </h2>) : (
+      <>
+        <h4>Start Block: {startBlock} </h4><div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-1 lg:text-left">
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <h2 className="text-xl text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              All Time Transactions
+            </h2>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 py-5">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">Amount(STX)</th>
+                  <th scope="col" className="px-6 py-3">Sender</th>
+                  <th scope="col" className="px-6 py-3">Recipient</th>
+                  <th scope="col" className="px-6 py-3">Block(STX)</th>
+                  <th scope="col" className="px-6 py-3">Tx Id</th>
+                  <th scope="col" className="px-6 py-3">Tx Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {allTimeData?.map((data, index) => (
+                  <tr key={index}>
+                    <td className="px-6 py-3">{(data.amount / Math.pow(10, 6)).toLocaleString()}</td>
+                    <td className="px-6 py-3">{shortenString(data?.sender)}</td>
+                    <td className="px-6 py-3">{shortenString(data?.recipient)}</td>
+                    <td className="px-6 py-3">{data?.block}</td>
+                    <td className="px-6 py-3">
+                      <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
+                        {shortenString(data?.tx_id)}
+                      </a>
+                    </td>
+                    <td className="px-6 py-3">{convertDateTime(data.tx_timestamp)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <h2 className="text-xl text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              Recent Transactions
+            </h2>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 py-5">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">Amount(STX)</th>
+                  <th scope="col" className="px-6 py-3">Sender</th>
+                  <th scope="col" className="px-6 py-3">Recipient</th>
+                  <th scope="col" className="px-6 py-3">Block(STX)</th>
+                  <th scope="col" className="px-6 py-3">Tx Id</th>
+                  <th scope="col" className="px-6 py-3">Tx Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentData?.map((data, index) => (
+                  <tr key={index}>
+                    <td className="px-6 py-3">{(data.amount / Math.pow(10, 6)).toLocaleString()}</td>
+                    <td className="px-6 py-3">{shortenString(data?.sender)}</td>
+                    <td className="px-6 py-3">{shortenString(data?.recipient)}</td>
+                    <td className="px-6 py-3">{data.block}</td>
+                    <td className="px-6 py-3">
+                      <a href={`https://explorer.hiro.so/txid/${data.tx_id}?chain=mainnet`} onClick={handleLinkClick} className="text-blue-600 hover:text-blue-800 visited:text-purple-600">
+                        {shortenString(data?.tx_id)}
+                      </a>
+                    </td>
+                    <td className="px-6 py-3">{convertDateTime(data.tx_timestamp)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </>)}
     </main>
   );
 }
